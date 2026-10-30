@@ -1,6 +1,7 @@
-type MinMax = Readonly<[number,number]>
-function minMax(arr:number[]):MinMax{
-  let min = Math.min(...arr)
-  let max = Math.max(...arr)
-  return [min,max]
+function describe(a:string | number) : "text" | "number" {
+  if(typeof a === "string") {
+    return "text"
+  } else {
+    return "number"
+  }
 }
