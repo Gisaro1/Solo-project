@@ -12,98 +12,65 @@ interface Admin {
     role: string;
 }
 
-function logUser(user: User) {
-    const pos = users.indexOf(user) + 1;
-    console.log(` - #${pos} User: ${user.name}, ${user.age}, ${user.occupation}`);
+interface PowerUser {
+    type: 'powerUser';
+    name: string;
+    age: number;
+    role: string;
+    occupation: string;
 }
 
-function logAdmin(admin: Admin) {
-    const pos = admins.indexOf(admin) + 1;
-    console.log(` - #${pos} Admin: ${admin.name}, ${admin.age}, ${admin.role}`);
-}
+export type Person = User | Admin | PowerUser;
 
-const admins: Admin[] = [
+export const persons: Person[] = [
+    { type: 'user', name: 'Max Mustermann', age: 25, occupation: 'Chimney sweep' },
+    { type: 'admin', name: 'Jane Doe', age: 32, role: 'Administrator' },
+    { type: 'user', name: 'Kate Müller', age: 23, occupation: 'Astronaut' },
+    { type: 'admin', name: 'Bruce Willis', age: 64, role: 'World saver' },
     {
-        type: 'admin',
-        name: 'Will Bruces',
-        age: 30,
-        role: 'Overseer'
-    },
-    {
-        type: 'admin',
-        name: 'Steve',
-        age: 40,
-        role: 'Steve'
+        type: 'powerUser',
+        name: 'Nikki Stone',
+        age: 45,
+        role: 'Moderator',
+        occupation: 'Cat groomer'
     }
 ];
 
-const users: User[] = [
-    {
-        type: 'user',
-        name: 'Moses',
-        age: 70,
-        occupation: 'Desert guide'
-    },
-    {
-        type: 'user',
-        name: 'Superman',
-        age: 28,
-        occupation: 'Ordinary person'
-    }
-];
-
-export function swap<T,U>(v1:T, v2:U):[U,T] {
-    return [v2, v1];
+function isAdmin(person: Person): person is Admin {
+    return typeof person === 'object' && person !== null && person.type === 'admin';
 }
 
-function test1() {
-    console.log('test1:');
-    const [secondUser, firstAdmin] = swap(admins[0], users[1]);
-    if(typeof secondUser !== "undefined"){
-        logUser(secondUser)
-    }
-    if(typeof firstAdmin !== "undefined"){
-        logAdmin(firstAdmin);
-    }
+function isUser(person: Person): person is User {
+    return typeof person === 'object' && person !== null && person.type === 'user';
 }
 
-function test2() {
-    console.log('test2:');
-    const [secondAdmin, firstUser] = swap(users[0], admins[1]);
-    if(typeof secondAdmin !== "undefined"){
-        logAdmin(secondAdmin);
-    }
-    if(typeof firstUser !== 'undefined'){
-        logUser(firstUser);
-    }
+function isPowerUser(person: Person): person is PowerUser {
+    return typeof person === 'object' && person !== null && person.type === 'powerUser';
 }
 
-function test3() {
-    console.log('test3:');
-    const [secondUser, firstUser] = swap(users[0], users[1]);
-    if(typeof secondUser !== "undefined")
-        logUser(secondUser)
-    if(typeof firstUser !== "undefined"){
-        logUser(firstUser);
+export function logPerson(person: Person) {
+    let additionalInformation: string = '';
+    if (isAdmin(person)) {
+        additionalInformation = person.role;
     }
+    if (isUser(person)) {
+        additionalInformation = person.occupation;
+    }
+    if (isPowerUser(person)) {
+        additionalInformation = `${person.role}, ${person.occupation}`;
+    }
+    console.log(`${person.name}, ${person.age}, ${additionalInformation}`);
 }
 
-function test4() {
-    console.log('test4:');
-    const [firstAdmin, secondAdmin] = swap(admins[1], admins[0]);
-    if(typeof firstAdmin !== "undefined"){
-        logAdmin(firstAdmin);
-    }
-    if(typeof secondAdmin !== "undefined"){
-        logAdmin(secondAdmin);
-    }
-}
+console.log('Admins:');
+persons.filter(isAdmin).forEach(logPerson);
 
-function test5() {
-    console.log('test5:');
-    const [stringValue, numericValue] = swap(123, 'Hello World');
-    console.log(` - String: ${stringValue}`);
-    console.log(` - Numeric: ${numericValue}`);
-}
+console.log();
 
-[test1, test2, test3, test4, test5].forEach((test) => test());
+console.log('Users:');
+persons.filter(isUser).forEach(logPerson);
+
+console.log();
+
+console.log('Power users:');
+persons.filter(isPowerUser).forEach(logPerson);
