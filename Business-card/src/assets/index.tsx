@@ -1,0 +1,5 @@
+export {default as Person} from '../assets/Person.png'
+export {default as IG} from '../assets/Instagram Icon (1).png'
+export {default as Mail} from '../assets/Mail (1).png'
+export {default as Git} from '../assets/GitHub Icon.png'
+export {default as X} from '../assets/Twitter Icon.png'
